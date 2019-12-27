@@ -29,7 +29,7 @@ public class MobileRobot extends Agent {
         System.out.println(getAgentName() + "получил заказ №" + orderId + " к исполнению");
         Order order = board.getOrderList().get(orderId);
         int count = order.getCount();
-        boolean status = true;
+        boolean status;
         boolean done = false;
         switch (order.getType()) {
             case BILLET:
@@ -49,6 +49,7 @@ public class MobileRobot extends Agent {
                         break;
                 }
                 status = checkPutBilletAvailable(count);
+                if (!status) break;
                 switch (order.getTo()) {
                     case STOREHOUSE:
                     case MACHINE:
@@ -121,7 +122,7 @@ public class MobileRobot extends Agent {
      */
     @Override
     protected String getStatus() {
-        return "Текущее состояние Мобильный робт " + id +
+        return "Текущее состояние Мобильный робот " + id +
                 " {\n\tЗаготовок: " + billetCount + "/" + billetCapacity +
                 "\n\tДеталей: " + detailCount + "/" + detailCapacity + "}";
     }
@@ -138,7 +139,7 @@ public class MobileRobot extends Agent {
      */
     protected boolean getDetail(int detailCount) {
         if (checkDetailCapacity(detailCount)) {
-            this.detailCount += this.detailCount;
+            this.detailCount += detailCount;
             System.out.println(getAgentName() + "Принято " + this.detailCount + " деталей");
             System.out.println(getStatus());
             return true;
