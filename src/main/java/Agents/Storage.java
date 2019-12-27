@@ -48,14 +48,16 @@ public class Storage  extends Agent {
      *
      * @param billetCount кол-во полученных заготовок
      */
-    public void addBillet(long billetCount) {
+    public boolean addBillet(long billetCount) {
         long availableBilletCapacity = getAvailableBilletCapacity();
         if (availableBilletCapacity == 0) {
             System.out.println(getAgentName() + "Не могу принять заготовки, т.к. нет свободного места");
+            return false;
         } else if (availableBilletCapacity < billetCount) {
             System.out.println(
                     getAgentName() + "Не могу принять " + billetCount + " заготовок, т.к. есть место только для " +
                             availableBilletCapacity);
+            return false;
         } else {
             this.billetCount += billetCount;
             System.out.println(getAgentName() + "Принято " + billetCount + " заготовок");
@@ -65,6 +67,7 @@ public class Storage  extends Agent {
             System.out.println(getStatus());
         }
         checkStatus();
+        return true;
     }
 
     /**
@@ -72,20 +75,23 @@ public class Storage  extends Agent {
      *
      * @param detailCount кол-во полученных деталей
      */
-    public void addDetail(long detailCount) {
+    public boolean addDetail(long detailCount) {
         long availableDetailCapacity = getAvailableDetailCapacity();
         if (availableDetailCapacity == 0) {
             System.out.println(getAgentName() + "Не могу принять детали, т.к. нет свободного места");
+            return false;
         } else if (availableDetailCapacity < detailCount) {
             System.out.println(
                     getAgentName() + "Не могу принять " + detailCount + " деталей, т.к. есть место только для " +
                             availableDetailCapacity);
+            return false;
         } else {
             this.detailCount += detailCount;
             System.out.println(getAgentName() + "Принято " + detailCount + " деталей");
             System.out.println(getStatus());
         }
         checkStatus();
+        return true;
     }
 
     /**
@@ -116,32 +122,36 @@ public class Storage  extends Agent {
      *
      * @param billetCount кол-во заготовок для отгрузки
      */
-    public void getBillet(long billetCount) {
+    public boolean getBillet(long billetCount) {
         if (billetCount > this.billetCount) {
             System.out.println(getAgentName() + "Не могу отдать " + billetCount +
                     " заготовок, т.к. имеется только " + this.billetCount);
+            return false;
         } else {
             this.billetCount -= billetCount;
             System.out.println(getAgentName() + "Отдано " + billetCount + " заготовок");
             System.out.println(getStatus());
         }
         checkStatus();
+        return true;
     }
     /**
      * Осуществляет отгрузку деталей
      *
      * @param detailCount кол-во деталей для отгрузки
      */
-    public void getDetail(long detailCount) {
+    public boolean getDetail(long detailCount) {
         if (detailCount > this.detailCount) {
             System.out.println(getAgentName() + "Не могу отдать " + detailCount +
                     " деталей, т.к. имеется только " + this.detailCount);
+            return false;
         } else {
             this.detailCount -= detailCount;
             System.out.println(getAgentName() + "Отдано " + detailCount + " деталей");
             System.out.println(getStatus());
         }
         checkStatus();
+        return true;
     }
 
     @Override
