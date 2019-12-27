@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringJoiner;
 
-public class Start {
+public class Start_3_lab {
     public static void main(String[] args) {
         System.out.println("\nВведите параметра для создания Агента Места хранения");
         Scanner scan = new Scanner(System.in,"utf-8");
