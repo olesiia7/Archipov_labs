@@ -1,3 +1,5 @@
+package Agents;
+
 public abstract class Agent {
     /**
      * @return текущее состояние робота

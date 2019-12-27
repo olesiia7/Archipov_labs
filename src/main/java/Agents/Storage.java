@@ -1,4 +1,6 @@
-public class Storage  extends Agent{
+package Agents;
+
+public class Storage  extends Agent {
     private final long detailCapacity;
     private final long billetCapacity;
     private long detailCount;
@@ -10,7 +12,7 @@ public class Storage  extends Agent{
      * @param detailCapacity максимальная вместимость деталей
      * @param billetCapacity максимальная вместимость заготовок
      */
-    protected Storage(long detailCapacity, long billetCapacity) {
+    public Storage(long detailCapacity, long billetCapacity) {
         this.detailCapacity = detailCapacity;
         this.billetCapacity = billetCapacity;
         System.out.println(" ==== ");
@@ -35,6 +37,7 @@ public class Storage  extends Agent{
     /**
      * @return текущей статус заполненности заготовками и деталями
      */
+    @Override
     protected String getStatus() {
         return "Текущее состояние Места хранения {\n\tЗаготовок: " + billetCount + "/" + billetCapacity +
                 "\n\tДеталей: " + detailCount + "/" + detailCapacity + "}";
@@ -45,7 +48,7 @@ public class Storage  extends Agent{
      *
      * @param billetCount кол-во полученных заготовок
      */
-    protected void addBillet(long billetCount) {
+    public void addBillet(long billetCount) {
         long availableBilletCapacity = getAvailableBilletCapacity();
         if (availableBilletCapacity == 0) {
             System.out.println(getAgentName() + "Не могу принять заготовки, т.к. нет свободного места");
@@ -69,7 +72,7 @@ public class Storage  extends Agent{
      *
      * @param detailCount кол-во полученных деталей
      */
-    protected void addDetail(long detailCount) {
+    public void addDetail(long detailCount) {
         long availableDetailCapacity = getAvailableDetailCapacity();
         if (availableDetailCapacity == 0) {
             System.out.println(getAgentName() + "Не могу принять детали, т.к. нет свободного места");
@@ -113,7 +116,7 @@ public class Storage  extends Agent{
      *
      * @param billetCount кол-во заготовок для отгрузки
      */
-    protected void getBillet(long billetCount) {
+    public void getBillet(long billetCount) {
         if (billetCount > this.billetCount) {
             System.out.println(getAgentName() + "Не могу отдать " + billetCount +
                     " заготовок, т.к. имеется только " + this.billetCount);
@@ -129,7 +132,7 @@ public class Storage  extends Agent{
      *
      * @param detailCount кол-во деталей для отгрузки
      */
-    protected void getDetail(long detailCount) {
+    public void getDetail(long detailCount) {
         if (detailCount > this.detailCount) {
             System.out.println(getAgentName() + "Не могу отдать " + detailCount +
                     " деталей, т.к. имеется только " + this.detailCount);
@@ -141,6 +144,7 @@ public class Storage  extends Agent{
         checkStatus();
     }
 
+    @Override
     protected String getAgentName() {
         return "Место хранения: ";
     }
