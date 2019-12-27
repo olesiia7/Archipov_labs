@@ -1,4 +1,4 @@
-public class Storage {
+public class Storage  extends Agent{
     private final long detailCapacity;
     private final long billetCapacity;
     private long detailCount;
@@ -141,7 +141,7 @@ public class Storage {
         checkStatus();
     }
 
-    private String getAgentName() {
+    protected String getAgentName() {
         return "Место хранения: ";
     }
 }
