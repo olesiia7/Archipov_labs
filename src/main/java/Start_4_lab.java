@@ -10,6 +10,7 @@ import java.util.StringJoiner;
 import static Agents.Billboard.Destination.STORAGE;
 import static Agents.Billboard.Destination.STOREHOUSE;
 import static Agents.Billboard.Type.BILLET;
+import static Agents.Billboard.Type.DETAIL;
 
 public class Start_4_lab {
     public static void main(String[] args) {
@@ -28,7 +29,7 @@ public class Start_4_lab {
         billetCapacity = scan.nextLong();
         System.out.print("\tМаксимальная вместимость деталей, шт: ");
         detailCapacity = scan.nextLong();
-        MobileRobot mobileRobot = new MobileRobot(0, detailCapacity, billetCapacity);
+        MobileRobot mobileRobot = new MobileRobot(0, billetCapacity, detailCapacity);
 
         Billboard board = new Billboard();
 
@@ -43,15 +44,21 @@ public class Start_4_lab {
                     int newBillet = Integer.parseInt(action.substring(3));
                     int orderId = board.placeOrder(newBillet, BILLET, STOREHOUSE, STORAGE);
                     mobileRobot.getOrder(orderId, storage, board);
+                    // забрать с Места хранения заготовки в количестве X шт
                 } else if (action.matches("[MМ]1 -\\d+")) {
                     int billets = Integer.parseInt(action.substring(4));
-                    storage.getBillet(billets);
+                    int orderId = board.placeOrder(billets, BILLET, STORAGE, STOREHOUSE);
+                    mobileRobot.getOrder(orderId, storage, board);
+                    // привезти детали на Место хранения в количестве X шт
                 } else if (action.matches("[MМ]2 \\d+")) {
                     int newDetail = Integer.parseInt(action.substring(3));
-                    storage.addDetail(newDetail);
+                    int orderId = board.placeOrder(newDetail, DETAIL, STOREHOUSE, STORAGE);
+                    mobileRobot.getOrder(orderId, storage, board);
+                    // забрать с Места хранения на склад детали в количестве X шт
                 } else if (action.matches("[MМ]2 -\\d+")) {
                     int details = Integer.parseInt(action.substring(4));
-                    storage.getDetail(details);
+                    int orderId = board.placeOrder(details, DETAIL, STORAGE, STOREHOUSE);
+                    mobileRobot.getOrder(orderId, storage, board);
                 } else if (action.equals("0")) {
                     System.out.println("Программа завершена");
                     break;

@@ -26,7 +26,7 @@ public class MobileRobot extends Agent {
     }
 
     public boolean getOrder(int orderId, Storage storage, Billboard board) {
-        System.out.println(getAgentName() + "получил заказ #" + orderId + " к исполнению");
+        System.out.println(getAgentName() + "получил заказ №" + orderId + " к исполнению");
         Order order = board.getOrderList().get(orderId);
         int count = order.getCount();
         boolean status = true;
