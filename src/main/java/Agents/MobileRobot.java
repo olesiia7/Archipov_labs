@@ -1,6 +1,9 @@
 package Agents;
 
+import Agents.Billboard.Destination;
 import Agents.Billboard.Order;
+
+import static Agents.Billboard.Destination.*;
 
 public class MobileRobot extends Agent {
     private final long detailCapacity;
@@ -25,10 +28,15 @@ public class MobileRobot extends Agent {
         System.out.println(" ==== ");
     }
 
+    public int getId() {
+        return id;
+    }
+
     public boolean getOrder(int orderId, Storage storage, Billboard board) {
         System.out.println(getAgentName() + "получил заказ №" + orderId + " к исполнению");
         Order order = board.getOrderList().get(orderId);
         int count = order.getCount();
+        Item item = order.getItem();
         boolean status;
         boolean done = false;
         switch (order.getType()) {
@@ -37,14 +45,13 @@ public class MobileRobot extends Agent {
                 if (!status) break;
                 switch (order.getFrom()) {
                     case STOREHOUSE:
-                    case MACHINE:
-                        status = getBillet(count);
+                        status = getBillet(count, item);
                         if (!status) break;
                         break;
                     case STORAGE:
                         status = storage.getBillet(count);
                         if (!status) break;
-                        status = getBillet(count);
+                        status = getBillet(count, item);
                         if (!status) break;
                         break;
                 }
@@ -52,14 +59,13 @@ public class MobileRobot extends Agent {
                 if (!status) break;
                 switch (order.getTo()) {
                     case STOREHOUSE:
-                    case MACHINE:
-                        status = putBillet(count);
+                        status = putBillet(count, item, STOREHOUSE);
                         if (!status) break;
                         break;
                     case STORAGE:
                         status = storage.addBillet(count);
                         if (!status) break;
-                        putBillet(count);
+                        putBillet(count, item, STORAGE);
                         done = true;
                         break;
                 }
@@ -69,27 +75,26 @@ public class MobileRobot extends Agent {
                 if (!status) break;
                 switch (order.getFrom()) {
                     case STOREHOUSE:
-                    case MACHINE:
-                        status = getDetail(count);
+                        status = getDetail(count, item);
                         if (!status) break;
                         break;
                     case STORAGE:
                         status = storage.getDetail(count);
                         if (!status) break;
-                        getDetail(count);
+                        getDetail(count, item);
                         break;
                 }
                 status = checkPutDetailAvailable(count);
+                if (!status) break;
                 switch (order.getTo()) {
                     case STOREHOUSE:
-                    case MACHINE:
-                        status = putDetail(count);
+                        status = putDetail(count, item, STOREHOUSE);
                         if (!status) break;
                         break;
                     case STORAGE:
                         status = storage.addDetail(count);
                         if (!status) break;
-                        putDetail(count);
+                        putDetail(count, item, STORAGE);
                         done = true;
                         break;
                 }
@@ -136,12 +141,17 @@ public class MobileRobot extends Agent {
      * Получение Мобильным роботом новых деталей
      *
      * @param detailCount кол-во полученных деталей
+     * @param item
      */
-    protected boolean getDetail(int detailCount) {
+    protected boolean getDetail(int detailCount, Item item) {
         if (checkDetailCapacity(detailCount)) {
             this.detailCount += detailCount;
             System.out.println(getAgentName() + "Принято " + this.detailCount + " деталей");
             System.out.println(getStatus());
+            if (item != null) {
+                item.setMobileRobotId(getId());
+                item.setDestination(MOBILE_ROBOT);
+            }
             return true;
         }
         return false;
@@ -166,11 +176,15 @@ public class MobileRobot extends Agent {
      *
      * @param billetCount кол-во полученных заготовок
      */
-    protected boolean getBillet(int billetCount) {
+    protected boolean getBillet(int billetCount,  Item item) {
         if (checkBilletCapacity(billetCount)) {
             this.billetCount += billetCount;
             System.out.println(getAgentName() + "Принято " + billetCount + " заготовок");
             System.out.println(getStatus());
+            if (item != null) {
+                item.setMobileRobotId(getId());
+                item.setDestination(MOBILE_ROBOT);
+            }
             return true;
         }
         return false;
@@ -194,12 +208,18 @@ public class MobileRobot extends Agent {
      * Осуществляет отгрузку заготовок
      *
      * @param billetCount кол-во заготовок для отгрузки
+     * @param item
+     * @param to
      */
-    protected boolean putBillet(int billetCount) {
+    protected boolean putBillet(int billetCount,  Item item, Destination to) {
         if (checkPutBilletAvailable(billetCount)) {
             this.billetCount -= billetCount;
             System.out.println(getAgentName() + "Отдано " + billetCount + " заготовок");
             System.out.println(getStatus());
+            if (item != null) {
+                item.setMobileRobotId(getId());
+                item.setDestination(to);
+            }
             return true;
         }
         return false;
@@ -218,12 +238,18 @@ public class MobileRobot extends Agent {
      * Осуществляет отгрузку деталей
      *
      * @param detailCount кол-во деталей для отгрузки
+     * @param item
+     * @param to
      */
-    protected boolean putDetail(int detailCount) {
+    protected boolean putDetail(int detailCount,  Item item, Destination to) {
         if (checkPutDetailAvailable(detailCount)) {
             this.detailCount -= detailCount;
             System.out.println(getAgentName() + "Отдано " + detailCount + " деталей");
             System.out.println(getStatus());
+            if (item != null) {
+                item.setMobileRobotId(getId());
+                item.setDestination(to);
+            }
             return true;
         }
         return false;
